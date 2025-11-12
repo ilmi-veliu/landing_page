@@ -1,4 +1,4 @@
-// Smooth scroll
+// Défilement fluide
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
         e.preventDefault();
@@ -12,17 +12,23 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
-// Navbar background on scroll
+// Effet de défilement sur la barre de navigation
+const navbar = document.querySelector('.navbar');
+let lastScroll = 0;
+
 window.addEventListener('scroll', () => {
-    const navbar = document.querySelector('.navbar');
-    if (window.scrollY > 50) {
-        navbar.style.boxShadow = '0 4px 6px rgba(0,0,0,0.1)';
+    const currentScroll = window.pageYOffset;
+    
+    if (currentScroll > 50) {
+        navbar.classList.add('scrolled');
     } else {
-        navbar.style.boxShadow = '0 1px 3px rgba(0,0,0,0.1)';
+        navbar.classList.remove('scrolled');
     }
+    
+    lastScroll = currentScroll;
 });
 
-// Animation on scroll
+// Animer les éléments lors du défilement
 const observerOptions = {
     threshold: 0.1,
     rootMargin: '0px 0px -50px 0px'
@@ -37,9 +43,20 @@ const observer = new IntersectionObserver((entries) => {
     });
 }, observerOptions);
 
-document.querySelectorAll('.feature-card, .tech-category').forEach(el => {
+// Observer toutes les cartes
+document.querySelectorAll('.about-card, .feature-card, .tech-category, .demo-card').forEach(el => {
     el.style.opacity = '0';
-    el.style.transform = 'translateY(20px)';
+    el.style.transform = 'translateY(30px)';
     el.style.transition = 'all 0.6s ease-out';
     observer.observe(el);
+});
+
+// Ajouter un effet de curseur (optionnel)
+document.addEventListener('mousemove', (e) => {
+    const hero = document.querySelector('.hero-gradient');
+    if (hero) {
+        const x = e.clientX / window.innerWidth;
+        const y = e.clientY / window.innerHeight;
+        hero.style.transform = `translate(calc(-50% + ${x * 50}px), ${y * 50}px)`;
+    }
 });
